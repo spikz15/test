@@ -1,0 +1,120 @@
+   <script>
+   function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            
+            reader.onload = function (e) {
+                $('#blah').attr('src', e.target.result);
+                
+                var test=document.getElementById("imgInp").files[0].name;
+                alert(test);
+                
+                //var test=$('#imgInp').val();
+                // var result=test.replace("C:\fakepath", test);
+                // alert(result);
+               // var result=test.split('');
+    //alert(result[2]);
+            }
+            
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    
+    $("#imgInp").change(function(){
+        readURL(this);
+    });
+    
+    </script>
+    
+    upload.php 
+    
+    <?php
+//upload.php
+$output_dir = "uploads/";
+ 
+if(isset($_FILES["myfile"]))
+{
+    //Filter the file types , if you want.
+    if ($_FILES["myfile"]["error"] > 0)
+    {
+      echo "Error: " . $_FILES["file"]["error"] . "<br>";
+    }
+    else
+    {
+        //move the uploaded file to uploads folder;
+        move_uploaded_file($_FILES["myfile"]["tmp_name"],$output_dir. $_FILES["myfile"]["name"]);
+ 
+     echo "Uploaded File :".$_FILES["myfile"]["name"];
+    }
+	
+   	echo $_REQUEST['email'];
+ 
+}
+?>
+
+index.html 
+
+<!doctype html>
+<head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
+<script src="http://malsup.github.com/jquery.form.js"></script>
+<style>
+form { display: block; margin: 20px auto; background: #eee; border-radius: 10px; padding: 15px }
+</style>
+</head>
+<body>
+<h1>Upload Your Images...</h1>
+ 
+<form id="myForm" action="upload.php" method="post" enctype="multipart/form-data">
+	 Email : <input type="text" name="email"><br><br>
+     <input type="file" size="60" name="myfile"><br><br>
+     <input type="submit" value="Ajax File Upload">
+ </form>
+
+<br/>
+ 
+<div id="message"></div>
+ 
+<script>
+$(document).ready(function()
+{
+ 
+    var options = { 
+    beforeSend: function() 
+    {
+
+       
+        $("#message").html("");
+
+    },
+    uploadProgress: function(event, position, total, percentComplete) 
+    {
+       
+ 
+    },
+    success: function() 
+    {
+       
+ 
+    },
+    complete: function(response) 
+    {
+        $("#message").html("<font color='green'>"+response.responseText+"</font>");
+		
+    },
+    error: function()
+    {
+        $("#message").html("<font color='red'> ERROR: unable to upload files</font>");
+ 
+    }
+ 
+}; 
+ 
+     $("#myForm").ajaxForm(options);
+ 
+});
+ 
+</script>
+</body>
+ 
+</html>
